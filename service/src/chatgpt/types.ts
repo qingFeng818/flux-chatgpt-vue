@@ -15,5 +15,13 @@ export interface SetProxyOptions {
 }
 
 export interface UsageResponse {
+  object: string
+  daily_costs: Array<{
+    timestamp: number
+    line_items: Array<{
+      name: string
+      cost: number
+    }>
+  }>
   total_usage: number
 }
