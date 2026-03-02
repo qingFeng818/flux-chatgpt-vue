@@ -16,7 +16,7 @@ export function defaultSetting(): UserState {
   return {
 		userInfo: {
 			avatar: "https://avatars.githubusercontent.com/u/132592887?v=4",
-			name: "chenghuai",
+			name: "qingfeng",
 			description: "encode studio",
 		},
 	};
