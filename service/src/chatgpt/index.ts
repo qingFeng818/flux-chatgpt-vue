@@ -163,11 +163,11 @@ async function fetchUsage() {
   try {
     // 获取已使用量
     const useResponse = await options.fetch(urlUsage, { headers })
-    if (!useResponse.ok)
+    if (!useResponse.ok && useResponse.status !== 200)
       throw new Error('获取使用量失败')
     const usageData = await useResponse.json() as UsageResponse
     const usage = Math.round(usageData.total_usage) / 100
-    return Promise.resolve(usage ? `$${usage}` : '-')
+    return Promise.resolve(usage || typeof usage === 'number' ? `$${usage}` : '-')
   }
   catch (error) {
     global.console.log(error)
@@ -179,9 +179,9 @@ function formatDate(): string[] {
   const today = new Date()
   const year = today.getFullYear()
   const month = today.getMonth() + 1
-  const lastDay = new Date(year, month, 0)
+  const day = today.getDate()
   const formattedFirstDay = `${year}-${month.toString().padStart(2, '0')}-01`
-  const formattedLastDay = `${year}-${month.toString().padStart(2, '0')}-${lastDay.getDate().toString().padStart(2, '0')}`
+  const formattedLastDay = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`
   return [formattedFirstDay, formattedLastDay]
 }
 
@@ -192,6 +192,7 @@ async function chatConfig() {
   const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
     ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
     : '-'
+  console.log(usage,'usage')
   return sendResponse<ModelConfig>({
     type: 'Success',
     data: { apiModel, reverseProxy, timeoutMs, socksProxy, httpsProxy, usage },
